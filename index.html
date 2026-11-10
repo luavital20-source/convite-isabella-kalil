@@ -196,10 +196,10 @@
     background:var(--card);color:var(--text);text-decoration:none;
     border-radius:30px;padding:12px 18px;
     box-shadow:0 10px 30px -10px rgba(141,15,80,.35);
-    font-size:10.5px;letter-spacing:1.5px;
-    opacity:0;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease;
+    font-size:10.5px;letter-spacing:1.5px;font-family:'Jost',sans-serif;border:none;cursor:pointer;
+    opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease;
   }
-  #floatMusic.show{opacity:1;transform:translateY(0);}
+  #floatMusic.show{opacity:1;transform:translateY(0);pointer-events:auto;}
   #floatMusic svg{width:14px;height:14px;stroke:var(--fuchsia);}
 </style>
 </head>
@@ -210,7 +210,6 @@
   <div class="names">Isabella &amp; Kalil</div>
   <div class="sub">08 · 01 · 2027</div>
   <div class="tap">Toque para abrir</div>
-  <div id="ytHolder" style="position:fixed;width:0;height:0;overflow:hidden;left:-100px;"></div>
 </div>
 
 <div class="wrap">
@@ -380,23 +379,59 @@
 
 </div>
 
-<a id="floatMusic" href="https://youtu.be/aCSeTSmvqys?t=67" target="_blank" rel="noopener">
+<div style="position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;" aria-hidden="true"><div id="ytPlayer"></div></div>
+
+<button id="floatMusic" type="button" aria-label="Pausar ou tocar a música">
   <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
-  NOSSA MÚSICA
-</a>
+  <span id="musicLabel">PAUSAR MÚSICA</span>
+</button>
 
 <script>
-  // Splash: fade out + tocar música (YouTube, a partir de 1:07) ao toque
+  // ---------- MÚSICA (YouTube) — começa em 1:07 ao abrir o convite ----------
+  const VIDEO_ID = 'aCSeTSmvqys';
+  const START_AT = 67; // 1:07
+  let player = null, playerReady = false, wantPlay = false, playing = false;
+
+  // Carrega a API do YouTube já no carregamento da página,
+  // para que o play aconteça no mesmo toque de "abrir" (necessário no celular)
+  (function(){
+    const s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(s);
+  })();
+
+  window.onYouTubeIframeAPIReady = function(){
+    player = new YT.Player('ytPlayer', {
+      width: 200, height: 200, videoId: VIDEO_ID,
+      playerVars: { start: START_AT, autoplay: 0, controls: 0, playsinline: 1, rel: 0 },
+      events: {
+        onReady: () => { playerReady = true; if (wantPlay) startMusic(); },
+        onStateChange: (e) => {
+          if (e.data === YT.PlayerState.ENDED) { player.seekTo(START_AT, true); player.playVideo(); }
+          playing = (e.data === YT.PlayerState.PLAYING);
+          updateMusicLabel();
+        }
+      }
+    });
+  };
+
+  function startMusic(){
+    if (!playerReady) { wantPlay = true; return; }
+    try { player.unMute(); player.setVolume(100); player.seekTo(START_AT, true); player.playVideo(); } catch(e){}
+  }
+  function updateMusicLabel(){
+    document.getElementById('musicLabel').textContent = playing ? 'PAUSAR MÚSICA' : 'TOCAR MÚSICA';
+  }
+  document.getElementById('floatMusic').addEventListener('click', () => {
+    if (!playerReady) { wantPlay = true; return; }
+    if (playing) player.pauseVideo(); else player.playVideo();
+  });
+
+  // Splash: fade out + tocar a música ao toque
   const preloader = document.getElementById('preloader');
   preloader.addEventListener('click', () => {
     preloader.classList.add('hidden');
-    try {
-      const holder = document.getElementById('ytHolder');
-      if (holder && !holder.dataset.on) {
-        holder.dataset.on = '1';
-        holder.innerHTML = '<iframe width="1" height="1" src="https://www.youtube.com/embed/aCSeTSmvqys?autoplay=1&start=67&controls=0&playsinline=1" allow="autoplay" frameborder="0"></iframe>';
-      }
-    } catch(e){}
+    startMusic();
     document.getElementById('floatMusic').classList.add('show');
   });
 
