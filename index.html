@@ -92,8 +92,13 @@
   }
 
   /* VERSE */
-  .verse-card-wrap{margin-top:-70px;padding:0 26px;position:relative;z-index:3;}
+  .verse-card-wrap{margin-top:-70px;padding:0 26px;position:relative;z-index:3;text-align:center;}
   .verse-card{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;line-height:1.7;color:#5a4650;}
+  .invite-text{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.6;color:#4a3841;}
+  .invite-names{font-family:'Pinyon Script',cursive;font-size:40px;color:var(--fuchsia);line-height:1.3;margin:10px 0 8px 0;}
+  .invite-names span{font-size:32px;padding:0 4px;color:var(--accent);}
+  .invite-sep{width:7px;height:7px;background:var(--accent);transform:rotate(45deg);margin:26px auto 24px auto;}
+  .verse-card{font-size:17px;}
   .verse-ref{font-family:'Jost';font-style:normal;font-size:11px;letter-spacing:2.5px;color:var(--accent);margin-top:14px;font-weight:500;}
 
   /* DATA / LOCAL */
@@ -224,10 +229,16 @@
     </div>
   </div>
 
-  <!-- VERSÍCULO -->
+  <!-- CONVITE + VERSÍCULO -->
   <div class="verse-card-wrap reveal">
-    <div class="card verse-card">
-      &ldquo;Assim, eles já não são dois, mas uma só carne. Portanto, o que Deus uniu, ninguém o separe.&rdquo;
+    <div class="card">
+      <div class="invite-text">Com a bênção de Deus<br>e de seus pais,</div>
+      <div class="invite-names">Isabella <span>&amp;</span> Kalil</div>
+      <div class="invite-text">com alegria convidam você<br>para a cerimônia de seu casamento.</div>
+      <div class="invite-sep"></div>
+      <div class="verse-card">
+        &ldquo;Assim, eles já não são dois, mas uma só carne. Portanto, o que Deus uniu, ninguém o separe.&rdquo;
+      </div>
       <div class="verse-ref">— MATEUS 19:6</div>
     </div>
   </div>
@@ -341,7 +352,7 @@
 
       <div class="pix-title">PRESENTEAR COM PIX</div>
       <div class="pix-box">
-        <div class="pix-key" id="pixKey">issbellavieiracont@gmail.com</div>
+        <div class="pix-key" id="pixKey">isabellavieiracont@gmail.com</div>
         <div class="pix-name">Isabella Vieira · PicPay</div>
         <button class="copy-btn" onclick="copyPix()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
